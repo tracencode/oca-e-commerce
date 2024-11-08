@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <!-- Copyright 2017 Sergio Teruel <sergio.teruel@tecnativa.com>
+         License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl). -->
+<template id="confirm"
+          inherit_id="website_sale.navigation_buttons"
+          name="confirm"
+          active="True">
+    <xpath expr="//div[1]" position="before">
+        <t t-if="xmlid == 'website_sale.payment'">
+            <div class="d-flex justify-content-center">
+                <div class="js_skip_payment mt-3" t-if="website.checkout_skip_payment" id="skip_payment_method">
+                    <form target="_self" action="/shop/payment/validate/skip" method="post" class="text-center">
+                        <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                        <input type="hidden" name="sale_order_id"
+                               t-att-value="request.session.get('sale_order_id', '')"/>
+
+                        <a role="button" class="btn btn-primary a-submit w-100 px-5" href="#">
+                            <span>Confirm
+                                <span class="fa fa-chevron-right"/>
+                            </span>
+                        </a>
+                    </form>
+                </div>
+            </div>
+        </t>
+    </xpath>
+</template>
+
+    <template id="confirmation_inherit" inherit_id="website_sale.confirmation">
+        <xpath expr="//h4[contains(@class, 'text-start') and contains(text(), 'Payment Information')]" position="after">
+            <t t-if="not tx_sudo.amount">
+            <div class="js_skip_payment mt-3" t-if="request.session.get('skip_payment_vals')" id="skip_payment_method">
+                <div class="custom-section">
+                     <h3>Thank you for your order.</h3><br/>
+                    <strong><h4>Order:
+                        <i><span t-out="request.session['skip_payment_vals']['order_name']" class="ms-3"/><i class="fa fa-check-circle ms-1"/></i></h4>
+                    </strong>
+                    <br></br>
+                    <br></br>
+                    <div class="card alert-success">
+                        <div class="card-header">
+                    <span t-field="website.website_sale_checkout_skip_message" class="ms-3"/>
+                            </div>
+                        </div>
+                </div>
+            </div>
+            </t>
+        </xpath>
+        <xpath expr="//td[strong[contains(text(), 'Total:')]]" position="replace">
+            <t t-if="tx_sudo.amount">
+                <td class="text-end pe-0" width="100">
+                    <strong>Total:</strong>
+                </td>
+            </t>
+        </xpath>
+        <xpath expr="//*[contains(@t-call, 'website_sale.payment_confirmation_status')]" position="replace">
+            <t t-if="tx_sudo.amount">
+                <t t-call="website_sale.payment_confirmation_status"/>
+            </t>
+        </xpath>
+    </template>
+</odoo>

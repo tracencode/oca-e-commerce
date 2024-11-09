@@ -5,7 +5,7 @@
 {
     "name": "Website Sale Checkout Skip Payment",
     "summary": "Skip payment for logged users in checkout process",
-    "version": "18.0.1.2.1",
+    "version": "17.0.0.0.1",
     "category": "Website",
     "website": "https://github.com/OCA/e-commerce",
     "author": "Tecnativa, Odoo Community Association (OCA)",
